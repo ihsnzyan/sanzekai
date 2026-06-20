@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanzekai | Socials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-nav { 
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+    <nav class="fixed w-full top-0 z-50 glass-nav border-b border-slate-800/50 transition-all duration-300">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                Sanzekai
+            </a>
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
+                <a href="projects.html" class="hover:text-blue-400 transition-colors">Projects</a>
+                <a href="social.html" class="text-blue-400">Social</a>
+                <a href="contact.html" class="hover:text-blue-400 transition-colors">Contact</a>
+            </div>
+            <button class="md:hidden text-slate-300 hover:text-white">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-5xl mx-auto px-6 pt-32 pb-20 w-full relative">
+        
+        <div class="absolute bottom-20 left-10 bg-emerald-600/10 w-80 h-80 rounded-full blur-3xl -z-10"></div>
+
+        <div class="mb-12 border-l-4 border-emerald-500 pl-5 flex flex-col gap-2">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+                Social <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Profiles</span>
+            </h1>
+            <a href="index.html" class="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-2 mt-2 w-fit">
+                <i class="fa-solid fa-arrow-left text-sm"></i> Back to home
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 relative z-10">
+
+            <a href="https://github.com/sanzekai" target="_blank" class="group bg-slate-900/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-white/30 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-white text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-github"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-base">GitHub</h3>
+                        <p class="text-slate-500 text-xs">@sanzekai</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+            </a>
+
+            <a href="https://www.linkedin.com/in/ihsan-septiano-3b2632350" target="_blank" class="group bg-slate-900/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-blue-500/30 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-base">LinkedIn</h3>
+                        <p class="text-slate-500 text-xs">Connect professionally</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"></i>
+            </a>
+
+            <a href="https://www.instagram.com/ihsnz_yan/" target="_blank" class="group bg-slate-900/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-pink-500/30 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-base">Instagram</h3>
+                        <p class="text-slate-500 text-xs">Personal updates</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-pink-400 group-hover:translate-x-1 transition-all"></i>
+            </a>
+
+            <a href="https://steamcommunity.com/id/sanzekai/" target="_blank" class="group bg-slate-900/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-indigo-500/30 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-steam"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-base">Steam</h3>
+                        <p class="text-slate-500 text-xs">Gaming profile</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all"></i>
+            </a>
+
+            <a href="https://open.spotify.com/user/31p4igkn7dx5btemjxzd3f2wnp54?si=d4891808dbd74a84" target="_blank" class="group bg-slate-900/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-emerald-500/30 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-spotify"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-base">Spotify</h3>
+                        <p class="text-slate-500 text-xs">My playlists</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all"></i>
+            </a>
+
+            <a href="https://www.tiktok.com/@ihsnz_yan?is_from_webapp=1&sender_device=pc" target="_blank" class="group bg-slate-900/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-fuchsia-500/30 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-fuchsia-500/10 text-fuchsia-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-base">TikTok</h3>
+                        <p class="text-slate-500 text-xs">@ihsnz_yan</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-fuchsia-400 group-hover:translate-x-1 transition-all"></i>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-800/50 mt-auto bg-slate-950/50">
+        <div class="max-w-5xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-slate-500 text-sm">© 2026 Sanzekai. All rights reserved.</p>
+            <div class="flex space-x-5 text-slate-400">
+                <a href="https://github.com/sanzekai" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-github text-xl"></i></a>
+                <a href="https://www.linkedin.com/in/ihsan-septiano-3b2632350" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fa-brands fa-linkedin text-xl"></i></a>
+                <a href="https://www.instagram.com/ihsnz_yan/" target="_blank" class="hover:text-pink-500 transition-colors"><i class="fa-brands fa-instagram text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
