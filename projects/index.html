@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanzekai | Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-nav { 
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+<nav class="fixed w-full top-0 z-50 glass-nav border-b border-slate-800/50 transition-all duration-300">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="../" class="text-2xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                Sanzekai
+            </a>
+            
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="../" class="hover:text-blue-400 transition-colors">Home</a>
+                <a href="../projects" class="text-blue-400">Projects</a>
+                <a href="../social" class="hover:text-blue-400 transition-colors">Social</a>
+                <a href="../contact" class="hover:text-blue-400 transition-colors">Contact</a>
+            </div>
+            
+            <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white transition-colors">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-md border-b border-slate-800/50">
+            <div class="flex flex-col px-6 py-4 space-y-4 text-sm font-medium">
+                <a href="../" class="hover:text-blue-400 transition-colors">Home</a>
+                <a href="../projects" class="text-blue-400">Projects</a>
+                <a href="../social" class="hover:text-blue-400 transition-colors">Social</a>
+                <a href="../contact" class="hover:text-blue-400 transition-colors">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-5xl mx-auto px-6 pt-32 pb-20 w-full relative">
+        
+        <div class="absolute top-20 left-0 bg-blue-600/10 w-72 h-72 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute bottom-20 right-0 bg-emerald-600/10 w-72 h-72 rounded-full blur-3xl -z-10"></div>
+
+        <div class="mb-12 border-l-4 border-emerald-500 pl-5 flex flex-col gap-2">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+                My <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Projects</span>
+            </h1>
+            <a href="../" class="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-2 mt-2 w-fit">
+                <i class="fa-solid fa-arrow-left text-sm"></i> Back to home
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+
+            <a href="https://github.com/sanzekai/terminal-ai" target="_blank" class="group bg-slate-900/80 backdrop-blur-sm p-7 rounded-2xl border border-slate-800 hover:border-emerald-500/50 hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.15)] transition-all duration-300 flex flex-col h-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <div class="relative z-10 flex-grow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-slate-800/80 text-emerald-400 rounded-xl">
+                            <i class="fa-solid fa-terminal text-xl"></i>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-slate-500 group-hover:text-emerald-400 transition-colors"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">Terminal-AI</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">Golang-based CLI Tool for integration with Gemini API.</p>
+                </div>
+                
+                <div class="relative z-10 flex flex-wrap gap-2 text-xs font-medium mt-auto">
+                    <span class="bg-slate-800 border border-slate-700 text-blue-300 px-3 py-1.5 rounded-lg">Golang</span>
+                    <span class="bg-slate-800 border border-slate-700 text-emerald-300 px-3 py-1.5 rounded-lg">Gemini API</span>
+                </div>
+            </a>
+
+            <a href="https://utbk.sanzekai.com" target="_blank" class="group bg-slate-900/80 backdrop-blur-sm p-7 rounded-2xl border border-slate-800 hover:border-blue-500/50 hover:shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] transition-all duration-300 flex flex-col h-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <div class="relative z-10 flex-grow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-slate-800/80 text-blue-400 rounded-xl">
+                            <i class="fa-solid fa-square-poll-vertical text-xl"></i>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-slate-500 group-hover:text-blue-400 transition-colors"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">UTBK Score Checker</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">UTBK Score Checker with Gemini API Integration.</p>
+                </div>
+                
+                <div class="relative z-10 flex flex-wrap gap-2 text-xs font-medium mt-auto">
+                    <span class="bg-slate-800 border border-slate-700 text-orange-300 px-3 py-1.5 rounded-lg">HTML</span>
+                    <span class="bg-slate-800 border border-slate-700 text-blue-300 px-3 py-1.5 rounded-lg">Golang</span>
+                    <span class="bg-slate-800 border border-slate-700 text-emerald-300 px-3 py-1.5 rounded-lg">Gemini API</span>
+                    <span class="bg-slate-800 border border-slate-700 text-purple-300 px-3 py-1.5 rounded-lg">SQL</span>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-800/50 mt-auto bg-slate-950/50">
+        <div class="max-w-5xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-slate-500 text-sm">© 2026 Sanzekai. All rights reserved.</p>
+            <div class="flex space-x-5 text-slate-400">
+                <a href="https://github.com/sanzekai" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-github text-xl"></i></a>
+                <a href="https://www.linkedin.com/in/ihsan-septiano-3b2632350" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fa-brands fa-linkedin text-xl"></i></a>
+                <a href="https://www.instagram.com/ihsnz_yan/" target="_blank" class="hover:text-pink-500 transition-colors"><i class="fa-brands fa-instagram text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
+</body>
+</html>
