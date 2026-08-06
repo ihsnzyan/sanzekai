@@ -51,7 +51,7 @@
                             <i class="fa-solid fa-music text-sm"></i>
                         </div>
                         <div class="flex flex-col overflow-hidden">
-                            <span class="text-xs font-semibold text-white truncate" id="songTitle">Memumping metadata...</span>
+                            <span class="text-xs font-semibold text-white truncate" id="songTitle">Memuat metadata...</span>
                             <span class="text-[10px] text-slate-400 truncate" id="songArtist">Audio Player</span>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                         </button>
                     </div>
                     <audio id="bgMusic" preload="metadata">
-                        <!-- Ganti path di bawah dengan file MP3 Anda -->
+                        <!-- Ganti path di bawah dengan file MP3 Anda di folder assets/audio/ -->
                         <source src="assets/audio/nama-lagu.mp3" type="audio/mpeg">
                     </audio>
                 </div>
@@ -195,59 +195,70 @@
         });
 
 
-        // --- 2. Letterboxd Recent Reviews Script ---
+        // --- 2. Letterboxd Recent Reviews Script (Direct XML Parser) ---
         document.addEventListener("DOMContentLoaded", function() {
             const username = 'ihsnz_yan';
-            const apiUrl = `https://api.rss2json.com/v1/api.rss?rss_url=https://letterboxd.com/${username}/rss/`;
+            const rssUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://letterboxd.com/${username}/rss/`)}`;
             const container = document.getElementById('letterboxd-reviews');
 
-            fetch(apiUrl)
+            fetch(rssUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'ok' && data.items.length > 0) {
-                        container.innerHTML = '';
-                        const items = data.items.slice(0, 3);
-                        
-                        items.forEach(item => {
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = item.description;
-                            
-                            const imgTag = tempDiv.querySelector('img');
-                            const posterUrl = imgTag ? imgTag.src : '';
-                            
-                            let reviewText = tempDiv.textContent || tempDiv.innerText || '';
-                            reviewText = reviewText.replace(/watched on.*?\./i, '').trim();
-                            if (reviewText.length > 120) {
-                                reviewText = reviewText.substring(0, 120) + '...';
-                            }
+                    if (data.contents) {
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+                        const items = xmlDoc.querySelectorAll("item");
 
-                            const card = document.createElement('a');
-                            card.href = item.link;
-                            card.target = '_blank';
-                            card.className = 'group bg-slate-900/50 hover:bg-slate-900 p-5 rounded-2xl border border-slate-800/80 hover:border-emerald-500/50 transition-all flex flex-col justify-between gap-4';
+                        if (items.length > 0) {
+                            container.innerHTML = '';
+                            const recentItems = Array.from(items).slice(0, 3);
                             
-                            card.innerHTML = `
-                                <div class="flex gap-4 items-start">
-                                    ${posterUrl ? `<img src="${posterUrl}" alt="${item.title}" class="w-16 h-24 object-cover rounded-lg shadow-md shrink-0 border border-slate-800 group-hover:scale-105 transition-transform">` : ''}
-                                    <div class="flex flex-col gap-1.5 overflow-hidden">
-                                        <h3 class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors line-clamp-2">${item.title}</h3>
-                                        <span class="text-[11px] text-slate-500 font-mono">${item.pubDate ? new Date(item.pubDate).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'}) : ''}</span>
-                                        ${reviewText ? `<p class="text-xs text-slate-400 mt-1 line-clamp-3 italic">"${reviewText}"</p>` : '<p class="text-xs text-slate-500 italic mt-1">Tidak ada ulasan tertulis.</p>'}
+                            recentItems.forEach(item => {
+                                const title = item.querySelector("title") ? item.querySelector("title").textContent : "No Title";
+                                const link = item.querySelector("link") ? item.querySelector("link").textContent : "#";
+                                const pubDate = item.querySelector("pubDate") ? item.querySelector("pubDate").textContent : "";
+                                const descriptionHtml = item.querySelector("description") ? item.querySelector("description").textContent : "";
+
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = descriptionHtml;
+                                
+                                const imgTag = tempDiv.querySelector('img');
+                                const posterUrl = imgTag ? imgTag.src : '';
+                                
+                                let reviewText = tempDiv.textContent || tempDiv.innerText || '';
+                                reviewText = reviewText.replace(/watched on.*?\./i, '').trim();
+                                if (reviewText.length > 120) {
+                                    reviewText = reviewText.substring(0, 120) + '...';
+                                }
+
+                                const card = document.createElement('a');
+                                card.href = link;
+                                card.target = '_blank';
+                                card.className = 'group bg-slate-900/50 hover:bg-slate-900 p-5 rounded-2xl border border-slate-800/80 hover:border-emerald-500/50 transition-all flex flex-col justify-between gap-4';
+                                
+                                card.innerHTML = `
+                                    <div class="flex gap-4 items-start">
+                                        ${posterUrl ? `<img src="${posterUrl}" alt="${title}" class="w-16 h-24 object-cover rounded-lg shadow-md shrink-0 border border-slate-800 group-hover:scale-105 transition-transform">` : ''}
+                                        <div class="flex flex-col gap-1.5 overflow-hidden">
+                                            <h3 class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors line-clamp-2">${title}</h3>
+                                            <span class="text-[11px] text-slate-500 font-mono">${pubDate ? new Date(pubDate).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'}) : ''}</span>
+                                            ${reviewText ? `<p class="text-xs text-slate-400 mt-1 line-clamp-3 italic">"${reviewText}"</p>` : '<p class="text-xs text-slate-500 italic mt-1">Tidak ada ulasan tertulis.</p>'}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex items-center justify-between pt-3 border-t border-slate-800/50 text-xs text-slate-500 group-hover:text-slate-300">
-                                    <span>Lihat di Letterboxd</span>
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-600 group-hover:text-emerald-400"></i>
-                                </div>
-                            `;
-                            container.appendChild(card);
-                        });
-                    } else {
-                        container.innerHTML = '<div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-800/80 md:col-span-3 text-center py-8"><p class="text-slate-400 text-sm">Belum ada aktivitas film terbaru.</p></div>';
+                                    <div class="flex items-center justify-between pt-3 border-t border-slate-800/50 text-xs text-slate-500 group-hover:text-slate-300">
+                                        <span>Lihat di Letterboxd</span>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-600 group-hover:text-emerald-400"></i>
+                                    </div>
+                                `;
+                                container.appendChild(card);
+                            });
+                        } else {
+                            container.innerHTML = '<div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-800/80 md:col-span-3 text-center py-8"><p class="text-slate-400 text-sm">Belum ada aktivitas film terbaru.</p></div>';
+                        }
                     }
                 })
                 .catch(error => {
-                    console.error('Gagal memuat Letterboxd:', error);
+                    console.error('Gagal memuat RSS Letterboxd:', error);
                     container.innerHTML = '<div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-800/80 md:col-span-3 text-center py-8"><p class="text-red-400 text-sm">Gagal memuat data ulasan film.</p></div>';
                 });
         });
