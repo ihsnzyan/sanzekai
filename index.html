@@ -20,7 +20,7 @@
 
     <div id="header-placeholder"></div>
 
-    <main class="flex-grow flex items-center pt-28 pb-16">
+    <main class="flex-grow flex flex-col justify-center pt-28 pb-16">
         <div class="max-w-5xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             
             <div class="order-2 md:order-1 flex flex-col items-center md:items-start text-center md:text-left">
@@ -34,14 +34,37 @@
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Ihsan Septiano</span>
                 </h1>
                 
-                <p class="text-slate-400 text-base md:text-lg max-w-lg mb-8 leading-relaxed">
+                <p class="text-slate-400 text-base md:text-lg max-w-lg mb-6 leading-relaxed">
                     Computer Science Student at Electronic Engineering Polytechnic Institute of Surabaya. Having interest in technology, cinematography, and music. Always eager to learn new things and improve myself.
                 </p>
 
-                <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
+                <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
                     <span class="px-3 py-1.5 bg-slate-800/80 text-blue-300 rounded-lg text-xs font-medium border border-slate-700"><i class="fa-solid fa-code mr-1"></i> Go / Flutter</span>
                     <span class="px-3 py-1.5 bg-slate-800/80 text-blue-300 rounded-lg text-xs font-medium border border-slate-700"><i class="fa-solid fa-database mr-1"></i> PHP / SQL</span>
                     <span class="px-3 py-1.5 bg-slate-800/80 text-emerald-300 rounded-lg text-xs font-medium border border-slate-700"><i class="fa-solid fa-palette mr-1"></i> Cinematography</span>
+                </div>
+
+                <!-- Music Player Widget (Auto-detect Metadata) -->
+                <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/80 flex items-center justify-between gap-4 w-full mb-6">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div id="musicIconBg" class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500/20 to-emerald-500/20 border border-slate-800 flex items-center justify-center shrink-0 text-emerald-400">
+                            <i class="fa-solid fa-music text-sm"></i>
+                        </div>
+                        <div class="flex flex-col overflow-hidden">
+                            <span class="text-xs font-semibold text-white truncate" id="songTitle">Memumping metadata...</span>
+                            <span class="text-[10px] text-slate-400 truncate" id="songArtist">Audio Player</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span id="songDuration" class="text-[10px] text-slate-500 font-mono hidden sm:inline">0:00 / 0:00</span>
+                        <button id="playPauseBtn" onclick="togglePlayMusic()" class="w-9 h-9 rounded-xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center transition-all shadow-lg shadow-blue-900/20 cursor-pointer disabled:opacity-50" disabled>
+                            <i id="playPauseIcon" class="fa-solid fa-spinner fa-spin text-xs"></i>
+                        </button>
+                    </div>
+                    <audio id="bgMusic" preload="metadata">
+                        <!-- Ganti path di bawah dengan file MP3 Anda -->
+                        <source src="assets/audio/nama-lagu.mp3" type="audio/mpeg">
+                    </audio>
                 </div>
                 
                 <div class="flex flex-wrap justify-center md:justify-start gap-4 w-full">
@@ -67,10 +90,167 @@
             </div>
             
         </div>
+
+        <!-- Section Letterboxd Recent Reviews -->
+        <div class="max-w-5xl mx-auto px-6 w-full mt-24">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
+                        <i class="fa-solid fa-film text-base"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Recent Movie Reviews</h2>
+                        <p class="text-xs text-slate-400">Latest films watched & reviewed on Letterboxd (<a href="https://letterboxd.com/ihsnz_yan/" target="_blank" class="text-emerald-400 hover:underline">@ihsnz_yan</a>)</p>
+                    </div>
+                </div>
+                <a href="https://letterboxd.com/ihsnz_yan/" target="_blank" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors">
+                    <span>See all on Letterboxd</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+            </div>
+
+            <!-- Grid Container untuk Review -->
+            <div id="letterboxd-reviews" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-800/80 md:col-span-3 text-center py-10">
+                    <p class="text-slate-400 text-sm animate-pulse">Memuat ulasan film terbaru...</p>
+                </div>
+            </div>
+        </div>
     </main>
 
     <div id="footer-placeholder"></div>
 
     <script src="/assets/script.js"></script>
+    <!-- Library jsmediatags untuk membaca ID3 Metadata dari file MP3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+
+    <script>
+        // --- 1. Music Player Script (Auto Metadata) ---
+        const audio = document.getElementById('bgMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const musicIconBg = document.getElementById('musicIconBg');
+        const songTitleEl = document.getElementById('songTitle');
+        const songArtistEl = document.getElementById('songArtist');
+        const songDurationEl = document.getElementById('songDuration');
+
+        const audioSourceUrl = audio.querySelector('source').src;
+
+        // Membaca Metadata ID3 dari file MP3
+        jsmediatags.read(audioSourceUrl, {
+            onSuccess: function(tag) {
+                const tags = tag.tags;
+                songTitleEl.innerText = tags.title || "Unknown Title";
+                songArtistEl.innerText = tags.artist || "Unknown Artist";
+            },
+            onError: function(error) {
+                console.log("Gagal membaca tag ID3, fallback ke nama file:", error);
+                let fileName = audioSourceUrl.split('/').pop().split('.')[0];
+                songTitleEl.innerText = fileName.replace(/-/g, ' ');
+                songArtistEl.innerText = "Custom Song";
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', function() {
+            playPauseBtn.disabled = false;
+            playPauseIcon.className = "fa-solid fa-play text-xs ml-0.5";
+            updateDurationDisplay();
+        });
+
+        function togglePlayMusic() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    playPauseIcon.className = "fa-solid fa-pause text-xs";
+                    musicIconBg.classList.add('animate-pulse', 'border-emerald-500/50');
+                }).catch(error => {
+                    console.error("Gagal memutar audio:", error);
+                });
+            } else {
+                audio.pause();
+                playPauseIcon.className = "fa-solid fa-play text-xs ml-0.5";
+                musicIconBg.classList.remove('animate-pulse', 'border-emerald-500/50');
+            }
+        }
+
+        audio.addEventListener('timeupdate', function() {
+            updateDurationDisplay();
+        });
+
+        function formatTime(seconds) {
+            let min = Math.floor(seconds / 60);
+            let sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function updateDurationDisplay() {
+            let current = formatTime(audio.currentTime);
+            let total = isNaN(audio.duration) ? "0:00" : formatTime(audio.duration);
+            songDurationEl.innerText = `${current} / ${total}`;
+        }
+
+        audio.addEventListener('ended', function() {
+            playPauseIcon.className = "fa-solid fa-play text-xs ml-0.5";
+            musicIconBg.classList.remove('animate-pulse', 'border-emerald-500/50');
+            audio.currentTime = 0;
+        });
+
+
+        // --- 2. Letterboxd Recent Reviews Script ---
+        document.addEventListener("DOMContentLoaded", function() {
+            const username = 'ihsnz_yan';
+            const apiUrl = `https://api.rss2json.com/v1/api.rss?rss_url=https://letterboxd.com/${username}/rss/`;
+            const container = document.getElementById('letterboxd-reviews');
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok' && data.items.length > 0) {
+                        container.innerHTML = '';
+                        const items = data.items.slice(0, 3);
+                        
+                        items.forEach(item => {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = item.description;
+                            
+                            const imgTag = tempDiv.querySelector('img');
+                            const posterUrl = imgTag ? imgTag.src : '';
+                            
+                            let reviewText = tempDiv.textContent || tempDiv.innerText || '';
+                            reviewText = reviewText.replace(/watched on.*?\./i, '').trim();
+                            if (reviewText.length > 120) {
+                                reviewText = reviewText.substring(0, 120) + '...';
+                            }
+
+                            const card = document.createElement('a');
+                            card.href = item.link;
+                            card.target = '_blank';
+                            card.className = 'group bg-slate-900/50 hover:bg-slate-900 p-5 rounded-2xl border border-slate-800/80 hover:border-emerald-500/50 transition-all flex flex-col justify-between gap-4';
+                            
+                            card.innerHTML = `
+                                <div class="flex gap-4 items-start">
+                                    ${posterUrl ? `<img src="${posterUrl}" alt="${item.title}" class="w-16 h-24 object-cover rounded-lg shadow-md shrink-0 border border-slate-800 group-hover:scale-105 transition-transform">` : ''}
+                                    <div class="flex flex-col gap-1.5 overflow-hidden">
+                                        <h3 class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors line-clamp-2">${item.title}</h3>
+                                        <span class="text-[11px] text-slate-500 font-mono">${item.pubDate ? new Date(item.pubDate).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'}) : ''}</span>
+                                        ${reviewText ? `<p class="text-xs text-slate-400 mt-1 line-clamp-3 italic">"${reviewText}"</p>` : '<p class="text-xs text-slate-500 italic mt-1">Tidak ada ulasan tertulis.</p>'}
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between pt-3 border-t border-slate-800/50 text-xs text-slate-500 group-hover:text-slate-300">
+                                    <span>Lihat di Letterboxd</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-600 group-hover:text-emerald-400"></i>
+                                </div>
+                            `;
+                            container.appendChild(card);
+                        });
+                    } else {
+                        container.innerHTML = '<div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-800/80 md:col-span-3 text-center py-8"><p class="text-slate-400 text-sm">Belum ada aktivitas film terbaru.</p></div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Gagal memuat Letterboxd:', error);
+                    container.innerHTML = '<div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-800/80 md:col-span-3 text-center py-8"><p class="text-red-400 text-sm">Gagal memuat data ulasan film.</p></div>';
+                });
+        });
+    </script>
 </body>
 </html>
