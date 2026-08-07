@@ -44,11 +44,14 @@
                     <span class="px-3 py-1.5 bg-slate-800/80 text-emerald-300 rounded-lg text-xs font-medium border border-slate-700"><i class="fa-solid fa-palette mr-1"></i> Cinematography</span>
                 </div>
 
-                <!-- Music Player Widget (Auto-detect Metadata) -->
+                <!-- Music Player Widget (Auto-detect Metadata & Album Art) -->
                 <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/80 flex items-center justify-between gap-4 w-full mb-6">
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <div id="musicIconBg" class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500/20 to-emerald-500/20 border border-slate-800 flex items-center justify-center shrink-0 text-emerald-400">
-                            <i class="fa-solid fa-music text-sm"></i>
+                        <div id="musicIconBg" class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500/20 to-emerald-500/20 border border-slate-800 flex items-center justify-center shrink-0 text-emerald-400 overflow-hidden">
+                            <!-- Default Icon -->
+                            <i id="defaultMusicIcon" class="fa-solid fa-music text-sm"></i>
+                            <!-- Dynamic Album Art Image (Hidden by default) -->
+                            <img id="songCoverArt" src="" alt="Album Art" class="absolute inset-0 w-full h-full object-cover hidden">
                         </div>
                         <div class="flex flex-col overflow-hidden">
                             <span class="text-xs font-semibold text-white truncate" id="songTitle">Memuat metadata...</span>
@@ -120,11 +123,10 @@
     <div id="footer-placeholder"></div>
 
     <script src="/assets/script.js"></script>
-    <!-- Library jsmediatags untuk membaca ID3 Metadata dari file MP3 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 
     <script>
-        // --- 1. Music Player Script (Auto Metadata) ---
+        // --- 1. Music Player Script (Auto Metadata & Cover Art) ---
         const audio = document.getElementById('bgMusic');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const playPauseIcon = document.getElementById('playPauseIcon');
@@ -132,6 +134,8 @@
         const songTitleEl = document.getElementById('songTitle');
         const songArtistEl = document.getElementById('songArtist');
         const songDurationEl = document.getElementById('songDuration');
+        const songCoverArt = document.getElementById('songCoverArt');
+        const defaultMusicIcon = document.getElementById('defaultMusicIcon');
 
         const sourceEl = audio.querySelector('source');
         const audioSourceUrl = sourceEl ? sourceEl.src : audio.src;
@@ -145,27 +149,43 @@
             return fileName ? (fileName.charAt(0).toUpperCase() + fileName.slice(1)).replace(/[-_]/g, ' ') : "Song";
         }
 
-        function setSongInfo(title, artist) {
+        function setSongInfo(title, artist, picture) {
             if (title) songTitleEl.innerText = title;
             if (artist) songArtistEl.innerText = artist;
+
+            if (picture) {
+                // Konversi byte array gambar dari id3 tags menjadi base64 url
+                let base64String = "";
+                for (let i = 0; i < picture.data.length; i++) {
+                    base64String += String.fromCharCode(picture.data[i]);
+                }
+                let base64 = "data:" + picture.format + ";base64," + window.btoa(base64String);
+                
+                // Tampilkan gambar cover art & sembunyikan icon default
+                songCoverArt.src = base64;
+                songCoverArt.classList.remove('hidden');
+                defaultMusicIcon.classList.add('hidden');
+            }
         }
 
-        // Membaca Metadata ID3 dari file MP3
+        // Membaca Metadata ID3 & Cover Art dari file MP3
         if (window.jsmediatags && audioSourceUrl) {
             jsmediatags.read(audioSourceUrl, {
                 onSuccess: function(tag) {
                     const tags = tag.tags;
                     const title = tags && tags.title ? tags.title : getFilenameFallback(audioSourceUrl);
                     const artist = tags && tags.artist ? tags.artist : "Audio Player";
-                    setSongInfo(title, artist);
+                    const picture = tags && tags.picture ? tags.picture : null;
+                    
+                    setSongInfo(title, artist, picture);
                 },
                 onError: function(error) {
                     console.log("Gagal membaca tag ID3, fallback ke nama file:", error);
-                    setSongInfo(getFilenameFallback(audioSourceUrl), "Audio Player");
+                    setSongInfo(getFilenameFallback(audioSourceUrl), "Audio Player", null);
                 }
             });
         } else {
-            setSongInfo(getFilenameFallback(audioSourceUrl), "Audio Player");
+            setSongInfo(getFilenameFallback(audioSourceUrl), "Audio Player", null);
         }
 
         function initAudioState() {
