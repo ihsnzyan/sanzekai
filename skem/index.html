@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Formulir SKEM PENS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Dimensi & Layout Presisi Lembar A4 */
+    .a4-sheet {
+      width: 210mm;
+      height: 297mm;
+      padding: 12mm 15mm;
+      background: #ffffff;
+      margin: 0 auto 30px auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Garis bingkai luar hitam tebal khas formulir PENS */
+    .pens-outer-border {
+      border: 2px solid #000;
+      width: 100%;
+      height: 100%;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column; 
+      position: relative;
+    }
+
+    /* Garis tabel presisi hitam 1px */
+    .tbl-pens {
+      border-collapse: collapse;
+      width: 100%;
+      border: 1.5px solid #000;
+      color: #000;
+    }
+    .tbl-pens th, .tbl-pens td {
+      border: 1px solid #000;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .a4-sheet {
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always;
+        break-after: page;
+        height: 297mm !important;
+        max-height: 297mm !important;
+        overflow: hidden !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-200 text-slate-900 min-h-screen py-8">
+
+  <div class="max-w-7xl mx-auto px-4">
+    <!-- Header Title Bar -->
+    <div class="no-print bg-slate-900 text-white p-5 rounded-2xl mb-8 flex flex-col md:flex-row items-center justify-between shadow-lg gap-4">
+      <div>
+        <h1 class="text-2xl font-bold tracking-wide">Formulir SKEM PENS Generator</h1>
+        <p class="text-sm text-slate-300 mt-0.5">Replika presisi 1:1 format 2 halaman sesuai Pedoman SKEM PENS.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          Download PDF (2 Halaman)
+        </button>
+        <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white font-medium px-4 py-2.5 rounded-xl transition text-sm">
+          Print Browser
+        </button>
+      </div>
+    </div>
+
+    <!-- 2 Kolom Layout: Input di Kiri, Preview 2 Halaman di Kanan -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Panel Kontrol Input -->
+      <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow border border-slate-300 no-print space-y-5 sticky top-6 max-h-[88vh] overflow-y-auto">
+        <h2 class="text-base font-bold text-slate-800 border-b pb-2 flex items-center gap-2">
+          <span>📋</span> Input Data SKEM
+        </h2>
+
+        <!-- Identitas Mahasiswa -->
+        <div class="space-y-3">
+          <div class="text-xs font-bold text-blue-700 uppercase tracking-wider">I. Identitas Mahasiswa</div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Nama Lengkap</label>
+            <!-- Default value ditambahkan di sini -->
+            <input type="text" id="in_nama" value="Mohammad Ihsan Septiano Firdaus" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Masukkan nama mahasiswa">          
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">NRP</label>
+            <!-- Default value ditambahkan di sini -->
+            <input type="text" id="in_nrp" value="3125600041" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Masukkan NRP">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Program Studi</label>
+            <!-- Default value ditambahkan di sini -->
+            <input type="text" id="in_prodi" value="STr Teknik Informatika" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Contoh: D4 Teknik Informatika">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Departemen</label>
+            <!-- Default value ditambahkan di sini -->
+            <input type="text" id="in_dept" value="Departemen Teknik Informatika dan Komputer" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Contoh: Departemen Teknik Informatika dan Komputer">
+          </div>
+        </div>
+
+        <!-- Informasi Kegiatan -->
+        <div class="space-y-3 pt-3 border-t">
+          <div class="text-xs font-bold text-blue-700 uppercase tracking-wider">II. Informasi Kegiatan</div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Nama Kegiatan</label>
+            <input type="text" id="in_kegiatan" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Nama kegiatan / lomba / seminar">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Tanggal Kegiatan</label>
+            <input type="text" id="in_tgl_kegiatan" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Contoh: 12 - 14 Mei 2026">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Lokasi / Platform</label>
+            <input type="text" id="in_lokasi" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Contoh: Hall D4 PENS / Zoom">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Penyelenggara</label>
+            <input type="text" id="in_penyelenggara" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Contoh: BEM PENS / Kemdikbud">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Jenis Lampiran Bukti Kegiatan</label>
+            <input type="text" id="in_lampiran" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Contoh: Sertifikat Juara 1 & Dokumentasi">
+          </div>
+        </div>
+
+        <!-- Kota & Tanggal Pengajuan -->
+        <div class="space-y-3 pt-3 border-t">
+          <div class="text-xs font-bold text-blue-700 uppercase tracking-wider">IV. Pernyataan Mahasiswa</div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Kota & Tanggal Pengesahan</label>
+            <input type="text" id="in_tgl_ttd" class="w-full text-xs rounded-lg border border-slate-300 p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Surabaya, 3 September 2026">
+          </div>
+        </div>
+
+        <!-- Upload Lampiran Halaman 2 -->
+        <div class="space-y-3 pt-3 border-t">
+          <div class="text-xs font-bold text-blue-700 uppercase tracking-wider">Lampiran Bukti (Halaman 2)</div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Unggah Gambar Sertifikat / Bukti</label>
+            <input type="file" id="in_file_lampiran" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            <button onclick="hapusLampiran()" type="button" class="mt-1 text-[11px] text-red-600 hover:underline">Hapus Gambar Lampiran</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Preview 2 Halaman A4 -->
+      <div id="pdf-container" class="lg:col-span-8 flex flex-col items-center">
+        
+        <!-- ======================= HALAMAN 1 ======================= -->
+        <div class="a4-sheet" id="page-1">
+          <div class="pens-outer-border">
+            
+            <!-- HEADER TABLE UTAMA PENS -->
+            <table class="tbl-pens text-center" style="margin-bottom: 14px; width: 100%;">
+              <tbody>
+                <tr>
+                  <!-- LOGO PENS (Spans 4 baris) -->
+                  <td rowspan="4" style="width: 16%; vertical-align: middle; padding: 10px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/id/4/44/Logo_PENS.png" alt="Logo PENS" class="w-16 mx-auto block" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'font-weight:900; font-size:20px; color:#0d47a1; text-align:center;\'>pens</div>';">
+                  </td>
+                  <!-- BARIS 1: SATUAN KREDIT -->
+                  <td style="width: 48%; padding: 6px 4px; font-size: 10.5pt; font-weight: bold; vertical-align: middle; line-height: 1.2;">
+                    SATUAN KREDIT<br>EKSTRAKURIKULER MAHASISWA<br>(SKEM)
+                  </td>
+                  <!-- METADATA 1 -->
+                  <td style="width: 18%; padding: 4px 6px; font-size: 9pt; font-weight: bold; text-align: left; vertical-align: middle;">
+                    No. Identifikasi
+                  </td>
+                  <td style="width: 18%; padding: 4px 6px; font-size: 9pt; text-align: left; vertical-align: middle;">
+                    FM.MHS.<br>PENGAJUANSKEM.<br>2026
+                  </td>
+                </tr>
+                <tr>
+                  <!-- BARIS 2 & 3: FORMULIR KEGIATAN (Spans 2 baris metadata) -->
+                  <td rowspan="2" style="padding: 12px 4px; font-size: 17pt; font-weight: bold; vertical-align: middle; line-height: 1.1;">
+                    FORMULIR<br>KEGIATAN SKEM
+                  </td>
+                  <!-- METADATA 2 -->
+                  <td style="padding: 4px 6px; font-size: 9pt; font-weight: bold; text-align: left; vertical-align: middle;">
+                    No. Revisi
+                  </td>
+                  <td style="padding: 4px 6px; font-size: 9pt; text-align: left; vertical-align: middle;">
+                    1
+                  </td>
+                </tr>
+                <tr>
+                  <!-- METADATA 3 -->
+                  <td style="padding: 4px 6px; font-size: 9pt; font-weight: bold; text-align: left; vertical-align: middle;">
+                    Tanggal Terbit
+                  </td>
+                  <td style="padding: 4px 6px; font-size: 9pt; text-align: left; vertical-align: middle;">
+                    23 Nov. 2025
+                  </td>
+                </tr>
+                <tr>
+                  <!-- BARIS 4: POLITEKNIK -->
+                  <td style="padding: 6px 4px; font-size: 9pt; font-weight: bold; vertical-align: middle;">
+                    POLITEKNIK ELEKTRONIKA NEGERI<br>SURABAYA
+                  </td>
+                  <!-- METADATA 4 -->
+                  <td style="padding: 4px 6px; font-size: 9pt; font-weight: bold; text-align: left; vertical-align: middle;">
+                    Halaman
+                  </td>
+                  <td style="padding: 4px 6px; font-size: 9pt; text-align: left; vertical-align: middle;">
+                    1 dari 2
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- JUDUL FORMULIR -->
+            <div style="text-align: center; font-weight: bold; font-size: 9.5pt; margin-bottom: 12px;">
+              Formulir Pengajuan Kredit Kegiatan Mahasiswa
+            </div>
+
+            <!-- I. IDENTITAS MAHASISWA -->
+            <div style="font-weight: bold; font-size: 9pt; margin-bottom: 3px;">I.&nbsp;&nbsp;Identitas Mahasiswa</div>
+            <table class="tbl-pens" style="font-size: 8.5pt; margin-bottom: 10px;">
+              <tr>
+                <td style="width: 25%; padding: 3px 6px;">Nama Lengkap</td>
+                <td style="width: 3%; text-align: center; padding: 3px 2px;">:</td>
+                <td style="width: 72%; padding: 3px 6px;" id="out_nama">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">NRP</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;" id="out_nrp">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Program Studi</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;" id="out_prodi">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Departemen</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;" id="out_dept">&nbsp;</td>
+              </tr>
+            </table>
+
+            <!-- II. INFORMASI KEGIATAN -->
+            <div style="font-weight: bold; font-size: 9pt; margin-bottom: 3px;">II.&nbsp;&nbsp;Informasi Kegiatan</div>
+            <table class="tbl-pens" style="font-size: 8.5pt; margin-bottom: 10px;">
+              <tr>
+                <td style="width: 25%; padding: 3px 6px;">Nama Kegiatan</td>
+                <td style="width: 3%; text-align: center; padding: 3px 2px;">:</td>
+                <td style="width: 72%; padding: 3px 6px;" id="out_kegiatan">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Tanggal Kegiatan</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;" id="out_tgl_kegiatan">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Lokasi / Platform</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;" id="out_lokasi">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Penyelenggara</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;" id="out_penyelenggara">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px; vertical-align: top;">Jenis Lampiran<br>Bukti Kegiatan</td>
+                <td style="text-align: center; padding: 3px 2px; vertical-align: top;">:</td>
+                <td style="padding: 3px 6px; vertical-align: top;" id="out_lampiran">&nbsp;</td>
+              </tr>
+            </table>
+
+            <!-- III. VERIFIKASI -->
+            <div style="font-weight: bold; font-size: 9pt; margin-bottom: 3px;">III.&nbsp;&nbsp;Verifikasi</div>
+            <table class="tbl-pens" style="font-size: 8.5pt; margin-bottom: 12px;">
+              <tr>
+                <td style="width: 25%; padding: 3px 6px;">Nama Verifikator</td>
+                <td style="width: 3%; text-align: center; padding: 3px 2px;">:</td>
+                <td style="width: 72%; padding: 3px 6px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Jabatan</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Tanggal Verifikasi</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px;">Keputusan</td>
+                <td style="text-align: center; padding: 3px 2px;">:</td>
+                <td style="padding: 3px 6px;">
+                  <span style="display: inline-flex; align-items: center; gap: 4px; margin-right: 18px;">
+                    <span style="display:inline-block; width:11px; height:11px; border:1px solid #000;"></span> Disetujui
+                  </span>
+                  <span style="display: inline-flex; align-items: center; gap: 4px;">
+                    <span style="display:inline-block; width:11px; height:11px; border:1px solid #000;"></span> Ditolak
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 6px; height: 42px; vertical-align: top;">Tanda Tangan<br>Verifikator</td>
+                <td style="text-align: center; padding: 3px 2px; vertical-align: top;">:</td>
+                <td style="padding: 3px 6px;">&nbsp;</td>
+              </tr>
+            </table>
+
+            <!-- IV. PERNYATAAN MAHASISWA -->
+            <div style="font-weight: bold; font-size: 9pt; margin-bottom: 3px;">IV.&nbsp;&nbsp;Pernyataan Mahasiswa</div>
+            <div style="border: 1.5px solid #000; padding: 6px 8px; font-size: 7.8pt; text-align: justify; line-height: 1.35; margin-bottom: 8px;">
+              Saya menyatakan bahwa seluruh data dan dokumen yang saya lampirkan adalah benar dan dapat dipertanggungjawabkan. Apabila di kemudian hari ditemukan ketidaksesuaian, pemalsuan, atau manipulasi data, saya bersedia menerima konsekuensi sesuai ketentuan yang berlaku, termasuk pembatalan pengajuan SKEM serta sanksi akademik atau administratif dari institusi.
+            </div>
+
+            <!-- TANDA TANGAN MAHASISWA -->
+            <div style="display: flex; justify-content: flex-end; margin-top: 4px; margin-bottom: 10px;">
+              <div style="text-align: center; width: 230px; font-size: 8.5pt;">
+                <div id="out_tgl_ttd">Surabaya, ............................</div>
+                <div style="height: 48px;"></div>
+                <div id="out_ttd_nama" style="font-weight: normal;">(Nama Mahasiswa)</div>
+                <div id="out_ttd_nrp">(NRP Mahasiswa)</div>
+              </div>
+            </div>
+
+          </div>
+          <!-- FOOTER LUAR BINGKAI -->
+          <div style="font-size: 8pt; color: #000; margin-top: 4px; padding-left: 2px;">
+            Pedoman SKEM 2025 – Politeknik Elektronika Negeri Surabaya
+          </div>
+        </div>
+
+        <!-- ======================= HALAMAN 2 ======================= -->
+        <div class="a4-sheet" id="page-2">
+          <div class="pens-outer-border" style="display: flex; flex-direction: column;">
+            
+            <!-- JUDUL LAMPIRAN DI ATAS -->
+            <div style="text-align: center; font-weight: bold; font-size: 10pt; margin-top: 10px; margin-bottom: 20px;">
+              Lampiran Bukti Kegiatan
+            </div>
+
+            <!-- TEMPAT LAMPIRAN DOKUMEN / GAMBAR -->
+            <div id="container-bukti" style="flex: 1; border: 1px dashed #bbb; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
+              <div id="placeholder-bukti" style="text-align: center; color: #9ca3af; font-size: 9pt;">
+                [ Area Lampiran Bukti Sertifikat / Dokumentasi Kegiatan ]<br>
+                <span style="font-size: 8pt;">(Unggah foto bukti lewat form di sebelah kiri)</span>
+              </div>
+              <img id="img-bukti" src="" alt="Bukti Kegiatan" style="display: none; max-width: 100%; max-height: 220mm; object-fit: contain;">
+            </div>
+
+          </div>
+          <!-- FOOTER LUAR BINGKAI HALAMAN 2 -->
+          <div style="font-size: 8pt; color: #000; margin-top: 4px; padding-left: 2px;">
+            Pedoman SKEM 2025 – Politeknik Elektronika Negeri Surabaya
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Live Binding Field Form ke Halaman Dokumen
+    const mapping = [
+      { in: 'in_nama', out: 'out_nama' },
+      { in: 'in_nrp', out: 'out_nrp' },
+      { in: 'in_prodi', out: 'out_prodi' },
+      { in: 'in_dept', out: 'out_dept' },
+      { in: 'in_kegiatan', out: 'out_kegiatan' },
+      { in: 'in_tgl_kegiatan', out: 'out_tgl_kegiatan' },
+      { in: 'in_lokasi', out: 'out_lokasi' },
+      { in: 'in_penyelenggara', out: 'out_penyelenggara' },
+      { in: 'in_lampiran', out: 'out_lampiran' },
+    ];
+
+    mapping.forEach(item => {
+      const inputEl = document.getElementById(item.in);
+      const outEl = document.getElementById(item.out);
+      inputEl.addEventListener('input', () => {
+        outEl.innerHTML = inputEl.value.trim() || '&nbsp;';
+        if (item.in === 'in_nama') {
+          document.getElementById('out_ttd_nama').textContent = inputEl.value.trim() ? '(' + inputEl.value.trim() + ')' : '(Nama Mahasiswa)';
+        }
+        if (item.in === 'in_nrp') {
+          document.getElementById('out_ttd_nrp').textContent = inputEl.value.trim() ? '(' + inputEl.value.trim() + ')' : '(NRP Mahasiswa)';
+        }
+      });
+    });
+
+    const tglInput = document.getElementById('in_tgl_ttd');
+    const tglOutput = document.getElementById('out_tgl_ttd');
+    tglInput.addEventListener('input', () => {
+      tglOutput.textContent = tglInput.value.trim() || 'Surabaya, ............................';
+    });
+
+    // Handle Upload Gambar Lampiran
+    const uploadInput = document.getElementById('in_file_lampiran');
+    const imgBukti = document.getElementById('img-bukti');
+    const placeholderBukti = document.getElementById('placeholder-bukti');
+
+    uploadInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imgBukti.src = e.target.result;
+          imgBukti.style.display = 'block';
+          placeholderBukti.style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function hapusLampiran() {
+      uploadInput.value = '';
+      imgBukti.src = '';
+      imgBukti.style.display = 'none';
+      placeholderBukti.style.display = 'block';
+    }
+
+    // Fungsi Generate PDF 2 Halaman
+    function downloadPDF() {
+      const element = document.getElementById('pdf-container');
+      const nrpVal = document.getElementById('in_nrp').value.trim() || 'export';
+      
+      const opt = {
+        margin: [0, 0, 0, 0],
+        filename: 'Formulir_SKEM_PENS_' + nrpVal + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Buat file PDF
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // Eksekusi trigger saat halaman pertama dimuat agar preview menampilkan data default
+    window.addEventListener('DOMContentLoaded', () => {
+      mapping.forEach(item => {
+        const inputEl = document.getElementById(item.in);
+        if(inputEl && inputEl.value) {
+          inputEl.dispatchEvent(new Event('input'));
+        }
+      });
+    });
+  </script>
+</body>
+</html>
